@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
-import { ADD_TASK, UPDATE_TASKS, FETCH_TASKS } from './actions';
+import { ADD_TASK, UPDATE_TASKS, FETCH_TASKS, REFRESH_TASK } from './actions';
 
-import { Tasks } from '../api/tasks';
+// import { Tasks } from '../api/tasks';
+import { cursor } from '../api/cursor';
 
 // const initialState = Tasks.find({}).fetch();
 
@@ -35,10 +36,31 @@ function tasks(state, action) {
   }
 
   switch (action.type) {
+
+    case ADD_TASK:
+      return [...state, action.task];
+
+    case REFRESH_TASK:
+      let oldTask = state.filter((item) => item._id === action.task._id)[0]
+      let idx = state.indexOf(oldTask);
+      console.error('task refreshed', idx, typeof state, state);
+      let newState = [
+        ...state.slice(0, idx),
+        action.task,
+        ...state.slice(idx + 1),
+      ];
+      return newState;
+
     case FETCH_TASKS:
-      return Tasks.find({}).fetch();
-    case UPDATE_TASKS:
-      return action.tasks;
+      const state = cursor.fetch();
+
+      // tasks.map((task) => {
+      //   task.text += 'Piort';
+      // });
+
+      return state;
+    // case UPDATE_TASKS:
+    //   return action.tasks;
     // case ADD_TASK:
     //   // Tasks.insert({ text: action.task.text }, () => {
     //   //   console.log('inserted');
@@ -49,6 +71,8 @@ function tasks(state, action) {
       return state;
   }
 }
+
+
 
 const todoApp = combineReducers({
   tasks,

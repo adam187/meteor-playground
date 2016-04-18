@@ -12,7 +12,7 @@ const TaskList = ({ tasks }) => (
 );
 
 const mapStateToProps = (state) => {
-  console.log('mapStateToProps@TaskList', state);
+  // console.log('mapStateToProps@TaskList', state);
   return {
     tasks: state.tasks,
   };

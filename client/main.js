@@ -8,21 +8,39 @@ import App from '../imports/ui/App.jsx';
 
 import store from '../imports/ui/store';
 
-import { Tasks } from '../imports/api/tasks';
+import { Tasks } from '../imports/collection/tasks';
+
+import { startObserve, initTasksLoaded } from '../imports/api/observe';
+
+import { Tracker } from 'meteor/tracker';
+
+Tracker.autorun(() => {
+  console.log('Tracker.autorun');
+  startObserve();
+});
 
 // console.log('main', App, store);
 //
-const handle = Meteor.subscribe('tasks', {
+// const handle = Meteor.subscribe('getPrivateTasks', {
+//   onReady: function () {
+//     console.log('privateTasks@ready', handle.ready());
+//     // store.dispatch(fetchTasks());
+//     loaded();
+//   },
+// });
+
+const handle2 = Meteor.subscribe('getPublicTasks', {
   onReady: function () {
-    console.log('tasks@ready', handle.ready());
+    console.log('publicTasks@ready', handle2.ready());
     store.dispatch(fetchTasks());
+    initTasksLoaded();
   },
 });
 
 //
 // console.log(handle, handle.ready());
 
-store.dispatch(fetchTasks());
+// store.dispatch(fetchTasks());
 
 Meteor.startup(() => {
   render(
